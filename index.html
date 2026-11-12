@@ -1,0 +1,40 @@
+<!doctype html>
+<html><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Trivia Night</title>
+<style>
+  body { margin:0; font-family: system-ui, sans-serif; background:#0f172a; color:#e2e8f0; }
+  main { max-width:1100px; margin:0 auto; padding:32px 20px; }
+  h1 { margin:0 0 4px; font-size:clamp(28px,5vw,48px); }
+  .sub { color:#94a3b8; margin-bottom:24px; }
+  table { width:100%; border-collapse:collapse; font-size:clamp(16px,2.4vw,26px); }
+  th { text-align:center; color:#94a3b8; font-weight:600; padding:10px 8px; border-bottom:2px solid #334155; }
+  th:nth-child(2) { text-align:left; }
+  td { text-align:center; padding:12px 8px; border-bottom:1px solid #1e293b; font-variant-numeric:tabular-nums; }
+  td.team { text-align:left; font-weight:600; }
+  .id { display:inline-block; min-width:2.4em; color:#94a3b8; font-weight:500; }
+  td.rank { color:#94a3b8; width:2em; }
+  td.total { font-weight:800; font-size:1.2em; }
+  tr.lead td { background:#1e293b; }
+  tr.lead td.total { color:#fbbf24; }
+</style></head>
+<body><main>
+<h1>Trivia Night</h1>
+<div class=sub>0 rounds scored · updated 5:01 PM</div>
+<table><thead><tr><th>#</th><th>Team</th><th>Total</th></tr></thead>
+<tbody><tr><td colspan=3 style="padding:40px;color:#94a3b8">Waiting for teams…</td></tr></tbody></table>
+</main>
+<script>
+// Pull a fresh copy every 10s (bypassing caches) and swap in the new scores.
+setInterval(async () => {
+  try {
+    const r = await fetch(location.pathname + "?t=" + Date.now(), {cache: "no-store"});
+    if (!r.ok) return;
+    const doc = new DOMParser().parseFromString(await r.text(), "text/html");
+    const fresh = doc.querySelector("main");
+    if (fresh && fresh.innerHTML !== document.querySelector("main").innerHTML)
+      document.querySelector("main").innerHTML = fresh.innerHTML;
+  } catch (e) {}
+}, 10000);
+</script>
+</body></html>
